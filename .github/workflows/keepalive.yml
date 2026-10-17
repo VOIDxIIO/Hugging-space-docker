@@ -1,0 +1,29 @@
+name: 24/7 Space Keepalive Ping
+
+on:
+  schedule:
+    # Run every 30 minutes to prevent Hugging Face Spaces from entering sleep mode
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping-space:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Hugging Face Space Status Endpoint
+        run: |
+          # Replace with your Space URL or add it to GitHub Repository Secrets as HF_SPACE_URL
+          SPACE_URL="${{ secrets.HF_SPACE_URL }}"
+          if [ -z "$SPACE_URL" ]; then
+            echo "HF_SPACE_URL secret not set. Skipping ping."
+            exit 0
+          fi
+
+          echo "Pinging Space: $SPACE_URL/api/status"
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$SPACE_URL/api/status" || true)
+          echo "Response code: $HTTP_STATUS"
+          if [ "$HTTP_STATUS" -eq 200 ]; then
+            echo "Space is alive and active!"
+          else
+            echo "Warning: Space returned status $HTTP_STATUS"
+          fi

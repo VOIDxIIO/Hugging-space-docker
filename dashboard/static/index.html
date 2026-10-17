@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cloud Chromium VNC Space | VOIDxIIO</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Header -->
+    <header class="header">
+      <div class="brand">
+        <div class="logo-icon">🌐</div>
+        <div>
+          <h1>Chromium VNC Space</h1>
+          <div class="badge-row">
+            <span class="status-badge" id="status-indicator"><span class="dot pulse"></span> Connecting...</span>
+            <span class="space-badge" id="space-name-badge">HuggingFace Space</span>
+          </div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-secondary" id="btn-toggle-fullscreen" title="Toggle Fullscreen">⛶ Fullscreen</button>
+        <button class="btn btn-danger" id="btn-restart-browser" title="Restart Chromium in container">🔄 Restart Browser</button>
+      </div>
+    </header>
+
+    <!-- Metrics Bar (IP, Ports, RAM, CPU) -->
+    <section class="metrics-grid">
+      <div class="metric-card highlight">
+        <div class="metric-icon">🌍</div>
+        <div class="metric-content">
+          <div class="metric-label">RUNNER PUBLIC IP</div>
+          <div class="metric-value" id="val-ip">Detecting...</div>
+          <div class="metric-sub" id="val-geo">Locating cloud region...</div>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-icon">🔌</div>
+        <div class="metric-content">
+          <div class="metric-label">VNC ACCESS PORTS</div>
+          <div class="metric-value">5900 <span class="dim">/</span> 7860</div>
+          <div class="metric-sub">Raw VNC :5900 | Web :7860</div>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-icon">⚡</div>
+        <div class="metric-content">
+          <div class="metric-label">MEMORY USAGE</div>
+          <div class="metric-value" id="val-ram">-- / -- MB</div>
+          <div class="progress-bar"><div class="progress-fill" id="ram-fill" style="width: 0%"></div></div>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-icon">⏱️</div>
+        <div class="metric-content">
+          <div class="metric-label">CONTAINER UPTIME</div>
+          <div class="metric-value" id="val-uptime">0m 0s</div>
+          <div class="metric-sub" id="val-cpu">Load: --</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="tab-btn active" data-tab="tab-vnc">🖥️ Remote Desktop (noVNC)</button>
+      <button class="tab-btn" data-tab="tab-connect">📱 Connect from Anywhere</button>
+      <button class="tab-btn" data-tab="tab-fleet">🚀 Multi-Docker Fleet Guide</button>
+      <button class="tab-btn" data-tab="tab-settings">⚙️ Controls & Resolution</button>
+    </nav>
+
+    <!-- Tab 1: Embedded noVNC Web Desktop -->
+    <section class="tab-content active" id="tab-vnc">
+      <div class="vnc-toolbar">
+        <div class="toolbar-left">
+          <span class="toolbar-status">🟢 Live Desktop Stream</span>
+          <span class="dim">|</span>
+          <button class="btn btn-sm" id="btn-reconnect-vnc">⚡ Reconnect</button>
+          <button class="btn btn-sm" id="btn-open-new-window">↗️ Open in New Window</button>
+        </div>
+        <div class="toolbar-right">
+          <span class="text-sm">Quick Resolution:</span>
+          <select id="quick-res-select" class="select-sm">
+            <option value="1280x720" selected>1280x720 (HD - Default)</option>
+            <option value="1920x1080">1920x1080 (Full HD)</option>
+            <option value="1024x768">1024x768 (Standard 4:3)</option>
+            <option value="720x1280">720x1280 (Mobile Portrait)</option>
+          </select>
+        </div>
+      </div>
+      <div class="vnc-container" id="vnc-frame-wrapper">
+        <iframe src="/novnc/vnc.html?autoconnect=true&resize=scale&reconnect=true" id="vnc-iframe" allow="clipboard-read; clipboard-write; fullscreen"></iframe>
+      </div>
+    </section>
+
+    <!-- Tab 2: Connection Info & Client Setup -->
+    <section class="tab-content" id="tab-connect">
+      <div class="card-grid">
+        <div class="guide-card">
+          <h2>🌐 Method 1: Web Browser (Direct noVNC)</h2>
+          <p>You can access this desktop from <strong>any phone, tablet, or PC</strong> in the world without installing any apps:</p>
+          <div class="code-box">
+            <span class="code-url" id="code-web-url">https://your-space.hf.space/novnc/vnc.html?autoconnect=true</span>
+            <button class="btn-copy" onclick="copyText('code-web-url')">Copy</button>
+          </div>
+          <ul>
+            <li>✅ Works in mobile Safari, Chrome, Kiwi Browser, Firefox.</li>
+            <li>✅ Fully responsive with auto-scaling to your screen size.</li>
+            <li>✅ Built-in virtual keyboard for mobile devices.</li>
+          </ul>
+        </div>
+
+        <div class="guide-card">
+          <h2>📲 Method 2: Native VNC Client (Android / iOS / PC)</h2>
+          <p>For native gestures, trackball mode, and zero latency, connect via standard VNC clients:</p>
+          <div class="client-recommendations">
+            <div class="client-pill"><strong>Android:</strong> AVNC / bVNC / RealVNC</div>
+            <div class="client-pill"><strong>iOS:</strong> Mocha VNC / VNC Viewer</div>
+            <div class="client-pill"><strong>PC / Mac:</strong> TigerVNC / TightVNC</div>
+          </div>
+          <table class="info-table">
+            <tr><td>Host:</td><td id="info-vnc-host">Direct Web Gateway (Port 7860)</td></tr>
+            <tr><td>Internal Port:</td><td><code>5900</code> (Raw RFB)</td></tr>
+            <tr><td>WebSocket Path:</td><td><code>/websockify</code></td></tr>
+            <tr><td>VNC Password:</td><td id="info-vnc-pw">None (or set via VNC_PASSWORD secret)</td></tr>
+          </table>
+          <p class="tip-box">💡 <strong>Tip for Raw VNC Port 5900:</strong> Hugging Face only routes port 7860 over public HTTPS. If you want a direct raw TCP port 5900 connection, add a free <code>CLOUDFLARE_TUNNEL_TOKEN</code> or <code>NGROK_AUTHTOKEN</code> in your Space Settings!</p>
+        </div>
+
+        <div class="guide-card full-width">
+          <h2>🚇 Active Tunnel Status</h2>
+          <div id="tunnel-status-container">
+            <p>Checking active tunnels...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 3: Multi-Docker Fleet & Hugging Face Limits Guide -->
+    <section class="tab-content" id="tab-fleet">
+      <div class="docs-wrapper">
+        <article class="doc-article">
+          <h2>📊 How Many Docker Spaces Can You Create on Hugging Face?</h2>
+          
+          <div class="summary-cards">
+            <div class="sum-card">
+              <span class="sum-num">Unlimited</span>
+              <span class="sum-desc">Total Spaces Created Per Account</span>
+            </div>
+            <div class="sum-card">
+              <span class="sum-num">5 - 10</span>
+              <span class="sum-desc">Concurrent Active Free Spaces per Account</span>
+            </div>
+            <div class="sum-card">
+              <span class="sum-num">16 GB</span>
+              <span class="sum-desc">Dedicated RAM per Free Space</span>
+            </div>
+            <div class="sum-card">
+              <span class="sum-num">2 vCPU</span>
+              <span class="sum-desc">Dedicated CPU Power per Free Space</span>
+            </div>
+          </div>
+
+          <h3>1. Hugging Face Free Tier Rules</h3>
+          <ul>
+            <li><strong>Total Spaces:</strong> You can create as many Space repositories as you want. There is no hard cap on the number of spaces in your account profile.</li>
+            <li><strong>Simultaneous Running Spaces:</strong> Hugging Face allows multiple free Spaces to run simultaneously. Typically, you can run between <strong>5 to 10 free Docker Spaces actively</strong> at the same time on a single account before hitting concurrent resource limits.</li>
+            <li><strong>Multi-Account Scaling:</strong> If you need 20, 50, or 100+ separate browser nodes, you can simply create multiple free Hugging Face accounts and deploy this identical repository to each account!</li>
+          </ul>
+
+          <h3>2. Auto-Sleep & 24/7 Keep-Alive Strategy</h3>
+          <p>By default, Hugging Face free Spaces automatically enter <strong>Sleep Mode after 48 hours of inactivity</strong> (no incoming web traffic).</p>
+          <div class="alert-box">
+            <strong>How to keep it running 24/7 forever:</strong>
+            <p>Set up an external free HTTP pinger to ping your Space URL every 10–15 minutes:</p>
+            <ol>
+              <li>Register a free account at <a href="https://uptimerobot.com" target="_blank" rel="noopener">UptimeRobot.com</a> or <a href="https://cron-job.org" target="_blank" rel="noopener">cron-job.org</a>.</li>
+              <li>Add a monitor pointing to your public Space URL: <code>https://&lt;username&gt;-&lt;space-name&gt;.hf.space/api/status</code>.</li>
+              <li>Set the interval to <strong>every 10 minutes</strong>. Because the ping receives a 200 OK response, Hugging Face considers the space active and it will <strong>never sleep</strong>!</li>
+            </ol>
+          </div>
+
+          <h3>3. How to Deploy Multiple Instances in 60 Seconds</h3>
+          <ol>
+            <li>Go to <a href="https://huggingface.co/new-space" target="_blank">huggingface.co/new-space</a>.</li>
+            <li>Set Space SDK to <strong>Docker</strong> (Blank).</li>
+            <li>Under repository, link or push this GitHub repo, or click <strong>Duplicate Space</strong> directly in Hugging Face!</li>
+            <li>Repeat to launch Node 2, Node 3, Node 4, etc.</li>
+          </ol>
+        </article>
+      </div>
+    </section>
+
+    <!-- Tab 4: Controls & Diagnostics -->
+    <section class="tab-content" id="tab-settings">
+      <div class="card-grid">
+        <div class="guide-card">
+          <h2>🛠️ Quick Actions</h2>
+          <p>Emergency controls if Chromium is closed by mistake or needs a fresh session:</p>
+          <div class="action-buttons-column">
+            <button class="btn btn-danger btn-block" id="btn-restart-browser-action">🔄 Force Restart Chromium</button>
+            <button class="btn btn-secondary btn-block" id="btn-reload-dashboard">📡 Refresh Status & Metrics</button>
+          </div>
+          <div id="action-feedback" class="feedback-msg"></div>
+        </div>
+
+        <div class="guide-card">
+          <h2>📐 Display Resolution</h2>
+          <p>Change virtual screen geometry dynamically:</p>
+          <div class="resolution-grid">
+            <button class="btn-res" data-res="1280x720">1280x720 (720p HD)</button>
+            <button class="btn-res" data-res="1920x1080">1920x1080 (1080p FHD)</button>
+            <button class="btn-res" data-res="1024x768">1024x768 (XGA)</button>
+            <button class="btn-res" data-res="720x1280">720x1280 (Phone Portrait)</button>
+          </div>
+        </div>
+
+        <div class="guide-card full-width">
+          <h2>⚙️ Container Configuration Secrets</h2>
+          <table class="info-table">
+            <thead>
+              <tr><th>Environment Variable</th><th>Default</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>VNC_PASSWORD</code></td><td>(None)</td><td>Optional password protecting the VNC and noVNC sessions.</td></tr>
+              <tr><td><code>RESOLUTION</code></td><td><code>1280x720</code></td><td>Virtual screen size (WxH).</td></tr>
+              <tr><td><code>CHROME_FLAGS</code></td><td><code>--no-sandbox...</code></td><td>Extra flags passed to Chromium binary.</td></tr>
+              <tr><td><code>CLOUDFLARE_TUNNEL_TOKEN</code></td><td>(None)</td><td>Optional token to expose raw VNC over Cloudflare Named Tunnel.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <span>Chromium VNC Cloud Space | Maintained by <a href="https://github.com/VOIDxIIO" target="_blank">VOIDxIIO</a></span>
+      <span class="dim">|</span>
+      <span>Hugging Face Docker SDK on Port 7860</span>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
