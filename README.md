@@ -33,22 +33,28 @@ This project provides an out-of-the-box, containerized desktop environment runni
 
 ---
 
-## 🚀 Quick Deployment (Deploy to Hugging Face in 3 Minutes)
+## 🚀 Quick Deployment Options
 
+### ⚡ Option A: 1-Click Free GitHub Codespaces (No Credit Card, 60 Hrs/Mo Free)
+1. At the top of this repository, click **`< > Code`** ➔ **`Codespaces`** ➔ **`Create codespace on main`**.
+2. GitHub boots your Docker Chromium instance and forwards port `7860`.
+3. Click **"Open in Browser"** when the notification appears. Done!
+
+### 🌐 Option B: Hugging Face Spaces
 1. Go to **[huggingface.co/new-space](https://huggingface.co/new-space)**.
-2. Select **Space SDK: Docker** (Blank).
-3. Choose the **Free CPU Basic Tier** (2 vCPU, 16GB RAM, 50GB Disk).
-4. Push or upload the files from this repository to your Space:
+2. Select **Space SDK: Docker** (Blank) and choose **CPU Basic Tier**.
+   > ⚠️ *Note:* If Hugging Face asks for a credit card or PRO subscription ($9/mo) for Docker, see [Free Deployment Alternatives (Zero Card)](docs/FREE_DEPLOYMENT_ALTERNATIVES.md).
+3. Push or upload the files from this repository to your Space:
    ```bash
    git remote add hf https://huggingface.co/spaces/<YOUR_HF_USERNAME>/<YOUR_SPACE_NAME>
    git push hf main --force
    ```
-5. Hugging Face builds the container and serves your live Chromium desktop on:
+4. Hugging Face builds the container and serves your live Chromium desktop on:
    ```text
    https://<YOUR_HF_USERNAME>-<YOUR_SPACE_NAME>.hf.space
    ```
 
-*Detailed visual walkthrough:* 👉 **[Read the Full Deployment Guide](docs/HUGGINGFACE_DEPLOY_GUIDE.md)**
+*Detailed visual walkthrough:* 👉 **[Read the Full Deployment Guide](docs/HUGGINGFACE_DEPLOY_GUIDE.md)** | **[Free Alternatives Guide](docs/FREE_DEPLOYMENT_ALTERNATIVES.md)**
 
 ---
 

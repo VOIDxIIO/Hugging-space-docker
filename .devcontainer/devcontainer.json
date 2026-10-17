@@ -1,0 +1,20 @@
+{
+  "name": "Cloud Chromium VNC Desktop",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": ".."
+  },
+  "forwardPorts": [7860],
+  "portsAttributes": {
+    "7860": {
+      "label": "Chromium Web Desktop & Dashboard",
+      "onAutoForward": "openBrowser"
+    }
+  },
+  "overrideCommand": false,
+  "customizations": {
+    "codespaces": {
+      "openFiles": ["README.md"]
+    }
+  }
+}
